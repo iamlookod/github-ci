@@ -5,12 +5,10 @@ on:
 
 jobs:
   job1:
-    id: job1
     uses: ./.github/workflows/config.yml
 
   job2:
     runs-on: ubuntu-latest
-    id: job2
     needs: job1
     steps:
       - run: echo ${{ needs.job1.outputs.firstword }} ${{ needs.job1.outputs.secondword }}
