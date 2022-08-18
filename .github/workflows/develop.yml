@@ -3,11 +3,16 @@ name: Call a reusable workflow and use its outputs
 on:
   workflow_dispatch:
 
+env:
+  SERVICE_NAME: "$(echo ${{ github.repository }} | cut  -d '/' -f 2)"
+  BRANCH: "$(echo ${{ github.ref }} | cut  -d '/' -f 3- | sed -e 's|/|-|g')"
+
 jobs:
   generate_config:
     uses: ./.github/workflows/config.yml
     with:
-      service_name: github_ci
+      service_name: ${{ env.SERVICE_NAME }}
+      branch: ${{ env.BRANCH }}
 
   build:
     runs-on: ubuntu-latest
