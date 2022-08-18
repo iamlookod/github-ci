@@ -11,8 +11,8 @@ jobs:
   generate_config:
     uses: ./.github/workflows/config.yml
     with:
-      service_name: ${{ env.SERVICE_NAME }}
-      branch: ${{ env.BRANCH }}
+      service_name: ${{ SERVICE_NAME }}
+      branch: ${{ BRANCH }}
 
   build:
     runs-on: ubuntu-latest
