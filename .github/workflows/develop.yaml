@@ -1,4 +1,4 @@
-name: Call a reusable workflow and use its outputs
+name: test
 
 on:
   push:
@@ -17,3 +17,9 @@ jobs:
       - run: |
           echo ${{ env.SERVICE_NAME }}
           echo ${{ env.BRANCH_NAME }}
+
+  generate_config:
+    uses: ./.github/workflows/config.yml
+    with:
+      service_name: ${{ env.SERVICE_NAME }}
+      branch: ${{ env.BRANCH_NAME }}
