@@ -2,20 +2,19 @@ name: test
 
 on:
   push:
-    branch:
+    branches:
       - main
   workflow_dispatch:
 
 jobs:
+  generate_config:
+    uses: ./.github/workflows/config.yml
+
   build:
     runs-on: ubuntu-latest
+    needs: generate_config
     steps:
-      - name: Generate Config
-        id: generate_config
-        uses: ./.github/workflows/config.yml
-
-      - name: Build
-        run: |
-          echo ${{ steps.generate_config.outputs.image_tag }}
-          echo ${{ steps.generate_config.outputs.image_name }}
-          echo ${{ steps.generate_config.outputs.image_repository }}
+      - run: |
+          echo ${{ needs.generate_config.outputs.image_tag }}
+          echo ${{ needs.generate_config.outputs.image_name }}
+          echo ${{ needs.generate_config.outputs.image_repository }}
