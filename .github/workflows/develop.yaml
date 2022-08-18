@@ -20,6 +20,3 @@ jobs:
 
   generate_config:
     uses: ./.github/workflows/config.yml
-    with:
-      service_name: "github_ci"
-      branch: "main"

@@ -2,14 +2,6 @@ name: Config workflow
 
 on:
   workflow_call:
-    inputs:
-      service_name:
-        required: true
-        type: string
-      branch:
-        required: true
-        type: string
-
     outputs:
       image_tag:
         description: "Docker image tag."
@@ -23,7 +15,6 @@ on:
 
 jobs:
   config:
-    name: Generate config output
     runs-on: ubuntu-latest
     # Map the job outputs to step outputs
     outputs:
@@ -31,10 +22,15 @@ jobs:
       image_name: ${{ steps.generate_config.outputs.image_name }}
       image_repository: ${{ steps.generate_config.outputs.image_repository }}
     steps:
-      - id: generate_config
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Generate Config
+        id: generate_config
         run: |
-          branch="$(echo {{ inputs.branch }})"
-          image_repository="$(echo {{ inputs.serivce_name }})"
+          branch="$(echo ${{ github.ref }} | cut  -d '/' -f 3- | sed -e 's|/|-|g')"
+          image_repository="$(echo ${{ github.repository }} | cut  -d '/' -f 2)"
           image_tag="${branch}-$(git describe --tag --always)"
           echo "::set-output name=image_tag::$image_tag"
           echo "::set-output name=image_repository::$image_repository"
