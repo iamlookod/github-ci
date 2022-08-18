@@ -11,21 +11,15 @@ env:
   BRANCH_NAME: $(echo ${{ github.ref }} | cut  -d '/' -f 3- | sed -e 's|/|-|g')
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo ${{ env.SERVICE_NAME }}
-          echo ${{ env.BRANCH_NAME }}
-
-  generate_config:
-    uses: ./.github/workflows/config.yml
-
   build:
-    runs-on: ubuntu-latest
-    needs: generate_config
+    runs-on: self-hosted
     steps:
-      - run: |
-          echo ${{ needs.generate_config.outputs.image_tag }}
-          echo ${{ needs.generate_config.outputs.image_name }}
-          echo ${{ needs.generate_config.outputs.image_repository }}
+      - name: Generate Config
+        id: generate_config
+        uses: ./.github/workflows/config.yml
+
+      - name: Build
+        run: |
+          echo ${{ step.generate_config.outputs.image_tag }}
+          echo ${{ step.generate_config.outputs.image_name }}
+          echo ${{ step.generate_config.outputs.image_repository }}
