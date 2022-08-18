@@ -1,6 +1,9 @@
 name: Call a reusable workflow and use its outputs
 
 on:
+  push:
+    branch:
+      - main
   workflow_dispatch:
 
 env:
