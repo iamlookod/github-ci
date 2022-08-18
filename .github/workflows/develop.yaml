@@ -6,14 +6,13 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  SERVICE_NAME: $(echo ${{ github.repository }} | cut  -d '/' -f 2)
-  BRANCH_NAME: $(echo ${{ github.ref }} | cut  -d '/' -f 3- | sed -e 's|/|-|g')
-
 jobs:
   build:
     runs-on: self-hosted
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Generate Config
         id: generate_config
         uses: ./.github/workflows/config.yml
