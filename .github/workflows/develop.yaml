@@ -19,6 +19,6 @@ jobs:
 
       - name: Build
         run: |
-          echo ${{ step.generate_config.outputs.image_tag }}
-          echo ${{ step.generate_config.outputs.image_name }}
-          echo ${{ step.generate_config.outputs.image_repository }}
+          echo ${{ steps.generate_config.outputs.image_tag }}
+          echo ${{ steps.generate_config.outputs.image_name }}
+          echo ${{ steps.generate_config.outputs.image_repository }}
