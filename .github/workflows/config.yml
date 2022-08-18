@@ -33,8 +33,8 @@ jobs:
     steps:
       - id: generate_config
         run: |
-          branch="${{ inputs.branch }}"
-          image_repository="${{ inputs.serivce_name }}"
+          branch="$(echo {{ inputs.branch }})"
+          image_repository="$(echo {{ inputs.serivce_name }})"
           image_tag="${branch}-$(git describe --tag --always)"
           echo "::set-output name=image_tag::$image_tag"
           echo "::set-output name=image_repository::$image_repository"
