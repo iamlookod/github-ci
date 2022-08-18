@@ -10,7 +10,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    needs: generate_config
     steps:
       - run: |
           echo ${{ env.SERVICE_NAME }}
