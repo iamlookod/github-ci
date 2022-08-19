@@ -5,6 +5,7 @@ on:
     inputs:
       service_name:
         description: "Set custome service name"
+        default: ""
         required: false
         type: string
     outputs:
@@ -21,7 +22,6 @@ on:
 jobs:
   config:
     runs-on: ubuntu-latest
-    # Map the job outputs to step outputs
     outputs:
       image_tag: ${{ steps.generate_config.outputs.image_tag }}
       image_name: ${{ steps.generate_config.outputs.image_name }}
@@ -31,13 +31,32 @@ jobs:
         id: checkout
         uses: actions/checkout@v2
 
+      - name: Generate Image Tag
+        id: gen_image_tag
+        run: |
+          branch="$(echo ${{ github.ref }} | cut  -d '/' -f 3- | sed -e 's|/|-|g')"
+          image_tag="${branch}-$(git describe --tag --always)"
+          echo "::set-output name=image_tag::$image_tag"
+
+      - name: Generate Image Repository
+        id: gen_image_repository
+        if: ${{ inputs.service_name != "" }}
+        run: |
+          image_repository="${{ inputs.service_name }}"
+          echo "::set-output name=image_repository::$image_repository"
+
+      - name: Generate Image Repository
+        id: gen_image_repository
+        if: ${{ inputs.service_name == "" }}
+        run: |
+          image_repository="$(echo ${{ github.repository }} | cut  -d '/' -f 2)"
+          echo "::set-output name=image_repository::$image_repository"
+
       - name: Generate Config
         id: generate_config
         run: |
-          echo ${{ inputs.service_name }}
-          branch="$(echo ${{ github.ref }} | cut  -d '/' -f 3- | sed -e 's|/|-|g')"
-          image_repository="$(echo ${{ github.repository }} | cut  -d '/' -f 2)"
-          image_tag="${branch}-$(git describe --tag --always)"
+          image_repository="${{ steps.generate_config.outputs.image_repository }}"
+          image_tag="${{ steps.generate_config.outputs.image_tag }}"
           echo "::set-output name=image_tag::$image_tag"
           echo "::set-output name=image_repository::$image_repository"
           echo "::set-output name=image_name::$image_repository:$image_tag"
