@@ -2,6 +2,11 @@ name: Config workflow
 
 on:
   workflow_call:
+    inputs:
+      service_name:
+        description: "Set custome service name"
+        required: false
+        type: string
     outputs:
       image_tag:
         description: "Docker image tag."
@@ -29,6 +34,7 @@ jobs:
       - name: Generate Config
         id: generate_config
         run: |
+          echo ${{ inputs.service_name }}
           branch="$(echo ${{ github.ref }} | cut  -d '/' -f 3- | sed -e 's|/|-|g')"
           image_repository="$(echo ${{ github.repository }} | cut  -d '/' -f 2)"
           image_tag="${branch}-$(git describe --tag --always)"
