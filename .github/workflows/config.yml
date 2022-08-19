@@ -40,16 +40,12 @@ jobs:
 
       - name: Generate Image Repository
         id: gen_image_repository
-        if: ${{ inputs.service_name != '' }}
         run: |
-          image_repository="${{ inputs.service_name }}"
-          echo "::set-output name=image_repository::$image_repository"
-
-      - name: Generate Image Repository
-        id: gen_image_repository
-        if: ${{ inputs.service_name == '' }}
-        run: |
-          image_repository="$(echo ${{ github.repository }} | cut  -d '/' -f 2)"
+          if [[ ${{ inputs.service_name }} == "" ]]; then
+            image_repository="${{ inputs.service_name }}"
+          else
+            image_repository="$(echo ${{ github.repository }} | cut  -d '/' -f 2)"
+          fi
           echo "::set-output name=image_repository::$image_repository"
 
       - name: Generate Config
